@@ -9,7 +9,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -31,6 +31,7 @@ var Engine = (function(global) {
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
+    let req;
     function main() {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
@@ -40,11 +41,10 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
+        const gameover = update(dt);
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -55,7 +55,9 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        if(!gameover) {
+          req = win.requestAnimationFrame(main);
+        }
     }
 
     /* This function does some initial setup that should only occur once,
@@ -63,9 +65,13 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+//      do {
         reset();
         lastTime = Date.now();
-        main();
+        //main();
+        req = win.requestAnimationFrame(main);
+//      } while (main());
+//        cancelAnimationFrame(req);
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -79,9 +85,17 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        return checkCollisions();
     }
 
+    function checkCollisions() {
+      for (enemy of allEnemies) {
+        if(enemy.y == player.y && player.x - 80 < enemy.x && enemy.x < player.x + 80) {
+          // collision occurs!
+          return true;
+        }
+      }
+    }
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
@@ -117,7 +131,7 @@ var Engine = (function(global) {
             numRows = 6,
             numCols = 5,
             row, col;
-        
+
         // Before drawing, clear existing canvas
         ctx.clearRect(0,0,canvas.width,canvas.height)
 
@@ -162,6 +176,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        resetEntities();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -173,7 +188,19 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png',
+        'images/Heart.png',
+        'images/Key.png',
+        'images/Rock.png',
+        'images/Selector.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 
