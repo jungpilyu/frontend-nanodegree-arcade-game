@@ -31,7 +31,7 @@ var Engine = (function(global) {
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
-    let req;
+
     function main() {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
@@ -44,7 +44,7 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        const gameover = update(dt);
+        update(dt);
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -55,9 +55,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        if(!gameover) {
-          req = win.requestAnimationFrame(main);
-        }
+        win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -65,13 +63,9 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-//      do {
         reset();
         lastTime = Date.now();
-        //main();
-        req = win.requestAnimationFrame(main);
-//      } while (main());
-//        cancelAnimationFrame(req);
+        main();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -85,17 +79,8 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        return checkCollisions();
     }
 
-    function checkCollisions() {
-      for (enemy of allEnemies) {
-        if(enemy.y == player.y && player.x - 80 < enemy.x && enemy.x < player.x + 80) {
-          // collision occurs!
-          return true;
-        }
-      }
-    }
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
@@ -176,7 +161,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
-        resetEntities();
+        intantiateEntities();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

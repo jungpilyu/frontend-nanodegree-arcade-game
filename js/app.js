@@ -7,13 +7,14 @@ let Enemy = function (y, speed) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.y = y; // {1,2,3}
-    this.reset = () => {
-      this.x = -101*Math.floor(Math.random() * 20); // {-101-101*5}
-      this.speed = Math.random()*300 + 100;
-    }
     this.reset(speed);
 };
 
+// this function assigns the initial enemy position and speed
+Enemy.prototype.reset = function() {
+  this.x = -101*Math.floor(Math.random() * 10); // {-101*10~-101}
+  this.speed = Math.random()*300 + 100;
+}
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -42,13 +43,30 @@ var Player = function (sprite) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = sprite || 'images/char-princess-girl.png';
-    this.update = function(dt) {
-    }
     this.reset = () => {
       this.x = 101*2;
       this.y = 5;
     }
     this.reset();
+
+    // the player methods of 'update', 'reset', 'handleInput' are not defined
+    // in the prototype link because there will be only one player instance.
+    this.update = function(dt) {
+      // check if the player collides the enemy
+      for (enemy of allEnemies) {
+        if(enemy.y == this.y && this.x - 80 < enemy.x && enemy.x < this.x + 80) {
+          // collision occurs!
+          this.reset();
+        }
+      }
+      // check if the player reaches the water
+      if(this.y == 0) {
+        setTimeout(() => {
+          this.reset();
+          alert('You win!');
+        }, 0);
+      }
+    }
 
     this.handleInput = function(key) {
       if(key == 'left' && this.x - 101 >= 0) {
@@ -62,35 +80,37 @@ var Player = function (sprite) {
       }
     }
 };
-Player.prototype = Enemy.prototype; // Re-use of 'render' function
+
+ // In order to re-use of 'render' function, link it!
+Player.prototype = Enemy.prototype;
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+// global entity variables
 let allEnemies = [];
-const numOfEnemiesPerLane = 2;
-for(let i = 0; i < numOfEnemiesPerLane; i++) {
-  allEnemies.push(new Enemy(1, Math.random()*300 + 100));
-  allEnemies.push(new Enemy(2, Math.random()*300 + 100));
-  allEnemies.push(new Enemy(3, Math.random()*300 + 100));
-}
-player = new Player();
+let player;
 
-function resetEntities() {
-  player.reset();
-  allEnemies.forEach(function(enemy) {
-    enemy.reset(Math.random()*300 + 100);
-  });
+// this function is called from the 'reset()' function in 'engine.js' file
+function intantiateEntities(level = 1) {
+  for(let i = 0; i < level; i++) {
+    allEnemies.push(new Enemy(1, Math.random()*300 + 100));
+    allEnemies.push(new Enemy(2, Math.random()*300 + 100));
+    allEnemies.push(new Enemy(3, Math.random()*300 + 100));
+  }
+  player = new Player();
 }
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        'ArrowLeft': 'left',
+        'ArrowUp': 'up',
+        'ArrowRight': 'right',
+        'ArrowDown': 'down'
     };
-
-    player.handleInput(allowedKeys[e.keyCode]);
+    // KeyboardEvent.keyCode is now removed from the Web standard.
+    // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+    // So, I replace the template code with that using KeyboardEvent.code.
+    player.handleInput(allowedKeys[e.code]);
 });
