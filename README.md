@@ -1,20 +1,27 @@
-# Classic Arcade Game Clone Project
+# Classic Frogger-style Arcade Game
 
-## Table of Contents
+[shot]: ./images/shot.png
 
-- [Instructions](#instructions)
-- [Contributing](#contributing)
+## Overview
 
-## Instructions
+This work was done as a partial fulfillment of the requirements for "Front-End Web Developer Nanodegree" of the Udacity. The project implements a frogger-style classic game which is played with the following rules:
 
-Use this [rubric](https://review.udacity.com/#!/rubrics/2013/view) for self-checking your submission.
+- The player move left, right, up and down.
+- The bugs move at varying speeds on the paved block portion of the game board
+- Once a player collides with a bug, the game is reset.
+- Once the player reaches the top of the game board, the game is over.
 
-Make sure the functions you write are **object-oriented** - either class functions (like `Player` and `Enemy`) or class prototype functions such as `Enemy.prototype.checkCollisions`. Also make sure that the keyword `this` is used appropriately within your class and class prototype functions to refer to the object the function is called upon.
+## External Library Dependency
+This game was written in Javascript with HTML5 canvas element without any external libraries.
 
-Your **README.md** file should be updated with instructions on both how to 1. Run and 2. Play your arcade game.
+## Install
+Download or clone the project files and open the `index.html` file with your favorite browser.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## Rules
+- Use the left, right, up, and down arrow key to move the player.
+- Try to cross the paved block of the game board without touching bugs.
+- When you reach the water, you win.
+- Colliding with bug, the player moves back to the starting position.
 
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+## Screen shot
+![screen shot][shot]

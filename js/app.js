@@ -92,7 +92,7 @@ let allEnemies = [];
 let player;
 
 // this function is called from the 'reset()' function in 'engine.js' file
-function intantiateEntities(level = 1) {
+function intantiateEntities(level = 2) {
   for(let i = 0; i < level; i++) {
     allEnemies.push(new Enemy(1, Math.random()*300 + 100));
     allEnemies.push(new Enemy(2, Math.random()*300 + 100));
