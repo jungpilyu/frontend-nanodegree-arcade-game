@@ -1,4 +1,6 @@
 // global entity variables
+'use strict';
+
 let allEnemies = [];
 let player;
 const playerSpeed = 500;
@@ -19,7 +21,8 @@ let Enemy = function (y, speed) {
 Enemy.prototype.reset = function() {
   this.x = -101*Math.floor(Math.random() * 10); // {-101*10~-101}
   this.speed = Math.random()*300 + 100;
-}
+};
+
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -29,13 +32,13 @@ Enemy.prototype.update = function(dt) {
     if(this.x < 5*101) {
       this.x += this.speed * dt;
     } else {
-      this.reset()
+      this.reset();
     }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(window.Resources.get(this.sprite), this.x, this.y);
 };
 
 // Now write your own player class
@@ -53,7 +56,7 @@ var Player = function (sprite = 'images/char-princess-girl.png') {
       this.x2 = 101*2;
       this.y = 5*83;
       this.y2 = 5*83;
-    }
+    };
     this.reset();
 
 
@@ -62,6 +65,7 @@ var Player = function (sprite = 'images/char-princess-girl.png') {
     // and no gain is obtained by define them in the prototype link.
     this.update = function(dt) {
       // check if the player collides the enemy
+      let enemy;
       for (enemy of allEnemies) {
         if(enemy.y == this.y && this.x - 80 < enemy.x && enemy.x < this.x + 80) {
           // collision occurs!
@@ -90,7 +94,7 @@ var Player = function (sprite = 'images/char-princess-girl.png') {
       } else {
         this.y -= (-dy < move ? -dy : move);
       }
-    }
+    };
 
     this.handleInput = function(key) {
       if(key == 'left' && this.x2 - 101 >= 0) {
@@ -102,7 +106,7 @@ var Player = function (sprite = 'images/char-princess-girl.png') {
       } else if (key == 'down' && this.y2 + 83 <= 5*83) {
         this.y2 += 83;
       }
-    }
+    };
 };
 
  // In order to re-use of 'render' function, link it!
